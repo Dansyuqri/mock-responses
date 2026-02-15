@@ -104,7 +104,7 @@ Filenames must be valid HTTP status codes (100-599). Arrays must be non-empty. S
 ## CI/CD
 
 - **GitHub Actions**: `.github/workflows/ci.yml` runs on pushes to `main` and all PRs.
-  - Matrix: Node.js 18, 20, 22.
+  - Matrix: Node.js 20, 22, 24.
   - Steps: `npm ci` → `npm run validate` → `npm test`.
 - **Dependabot**: `.github/dependabot.yml` checks npm and GitHub Actions dependencies weekly.
 
