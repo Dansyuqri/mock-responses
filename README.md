@@ -63,8 +63,12 @@ docker run -p 3000:3000 mock-server
 ```
 mock-server/
 ├── index.js            # Express server (~50 lines)
-├── responses.json      # All sarcastic messages, organized by status code
-├── validate.js         # Validates responses.json for contributors
+├── responses/          # Sarcastic messages, one file per status code
+│   ├── 200.json
+│   ├── 404.json
+│   ├── 500.json
+│   └── ...
+├── validate.js         # Validates responses/ for contributors
 ├── package.json        # Dependencies and scripts
 ├── Dockerfile          # Production container
 ├── CONTRIBUTING.md     # How to add responses
@@ -75,9 +79,9 @@ mock-server/
 
 ## Contributing
 
-The easiest way to contribute is by adding funny messages to `responses.json`. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+The easiest way to contribute is by adding funny messages to files in the `responses/` directory. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-**TL;DR:** Edit `responses.json`, run `npm run validate`, open a PR.
+**TL;DR:** Edit a file in `responses/` (or create a new one), run `npm run validate`, open a PR.
 
 ## License
 

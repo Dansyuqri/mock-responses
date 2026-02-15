@@ -2,15 +2,22 @@ const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.set('trust proxy', true);
 const PORT = process.env.PORT || 3000;
 
-// Load responses from JSON at startup
-const responses = JSON.parse(fs.readFileSync('./responses.json', 'utf-8'));
-const validCodes = Object.keys(responses).map(Number);
+// Load responses from responses/ directory at startup
+const responsesDir = path.join(__dirname, 'responses');
+const responses = {};
+for (const file of fs.readdirSync(responsesDir)) {
+  if (!file.endsWith('.json')) continue;
+  const code = path.basename(file, '.json');
+  responses[code] = JSON.parse(fs.readFileSync(path.join(responsesDir, file), 'utf-8'));
+}
+const validCodes = Object.keys(responses).map(Number).sort((a, b) => a - b);
 
 // Rate limiter: 120 requests per minute per IP
 const limiter = rateLimit({

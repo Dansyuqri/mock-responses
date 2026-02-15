@@ -4,20 +4,24 @@
 
 **mock-server** — "Like Mockoon, but worse."
 
-A server that mocks **you**. It returns real HTTP status codes with sarcastic, judgmental messages. Community members contribute funny responses via PRs to `responses.json`.
+A server that mocks **you**. It returns real HTTP status codes with sarcastic, judgmental messages. Community members contribute funny responses via PRs to files in the `responses/` directory.
 
 - **License**: MIT (Copyright 2026 Shooks)
 - **Repository owner**: Dansyuqri
 - **Tech stack**: Node.js, Express.js
-- **Data format**: Flat JSON file (`responses.json`)
+- **Data format**: One JSON file per status code in `responses/`
 
 ## Repository Structure
 
 ```
 mock-server/
 ├── index.js            # Express server — entry point, all routes
-├── responses.json      # Sarcastic messages keyed by HTTP status code
-├── validate.js         # Validates responses.json structure and rules
+├── responses/          # Sarcastic messages, one file per HTTP status code
+│   ├── 200.json        # e.g. ["message1", "message2"]
+│   ├── 404.json
+│   ├── 500.json
+│   └── ...
+├── validate.js         # Validates responses/ directory structure and rules
 ├── package.json        # Dependencies: express, cors, express-rate-limit
 ├── Dockerfile          # Production container (Node 22 Alpine)
 ├── .gitignore          # node_modules, .env, logs
@@ -40,14 +44,14 @@ npm start           # Starts server on port 3000 (or PORT env var)
 |---------|-------------|
 | `npm install` | Install dependencies |
 | `npm start` | Start the server (`node index.js`) |
-| `npm run validate` | Validate `responses.json` format and rules |
+| `npm run validate` | Validate `responses/` directory format and rules |
 
 ## Architecture
 
 - **Single-file server** (`index.js`, ~50 lines): Express app with two routes.
   - `GET /` — returns project info and available status codes.
-  - `GET /:statusCode` — returns the matching HTTP status code with a random sarcastic message from `responses.json`.
-- **Data loading**: `responses.json` is read once at startup into memory. No database.
+  - `GET /:statusCode` — returns the matching HTTP status code with a random sarcastic message from `responses/`.
+- **Data loading**: All `.json` files in `responses/` are read at startup into memory. No database.
 - **Rate limiting**: 120 req/min per IP via `express-rate-limit`. Uses `cf-connecting-ip` header when behind Cloudflare.
 - **CORS**: Enabled for all origins (public API).
 
@@ -62,16 +66,19 @@ npm start           # Starts server on port 3000 (or PORT env var)
 
 The response HTTP status code matches the requested code.
 
-### Data Format (`responses.json`)
+### Data Format (`responses/`)
 
+Each file is named `{statusCode}.json` and contains a JSON array of strings:
+
+**`responses/404.json`**
 ```json
-{
-  "200": ["message1", "message2"],
-  "404": ["message1", "message2"]
-}
+[
+  "message1",
+  "message2"
+]
 ```
 
-Keys are HTTP status code strings (100-599). Values are non-empty arrays of strings (max 200 chars each).
+Filenames must be valid HTTP status codes (100-599). Arrays must be non-empty. Strings max 200 chars each.
 
 ## Code Conventions
 
@@ -82,7 +89,7 @@ Keys are HTTP status code strings (100-599). Values are non-empty arrays of stri
 
 ## Testing
 
-- **Validation only**: `npm run validate` checks `responses.json` for structural correctness (valid codes, non-empty strings, no duplicates, max length).
+- **Validation only**: `npm run validate` checks every file in `responses/` for structural correctness (valid filename as status code, valid JSON array, non-empty strings, no duplicates, max length).
 - No unit test framework is configured yet.
 
 ## CI/CD
@@ -91,7 +98,7 @@ No CI/CD pipelines configured yet. When added, `npm run validate` should be a re
 
 ## Security Considerations
 
-This project accepts community contributions to `responses.json`. Key concerns:
+This project accepts community contributions to `responses/`. Key concerns:
 
 - **Content moderation**: All PRs must be reviewed by maintainers. CONTRIBUTING.md bans hate speech, personal info, URLs, HTML, and executable content.
 - **Validation**: `npm run validate` enforces structural rules (valid JSON, valid status codes, string-only values, 200-char max, no duplicates).
@@ -103,7 +110,7 @@ This project accepts community contributions to `responses.json`. Key concerns:
 
 - **Read before writing**: Always read existing files before proposing changes.
 - **Keep it simple**: This project values extreme simplicity. The whole server is ~50 lines. Don't add abstractions, frameworks, or patterns that aren't needed.
-- **responses.json is community-contributed**: Treat it as data, not code. Changes to its structure affect all contributors.
-- **Run validate**: After any change to `responses.json`, run `npm run validate`.
+- **responses/ is community-contributed**: Treat it as data, not code. Changes to the directory structure affect all contributors.
+- **Run validate**: After any change to files in `responses/`, run `npm run validate`.
 - **Update this file**: When adding infrastructure or conventions, update CLAUDE.md.
 - **Small commits**: Prefer focused, single-purpose commits.
