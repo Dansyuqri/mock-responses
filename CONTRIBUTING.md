@@ -4,26 +4,25 @@ Thanks for wanting to make HTTP errors funnier! Here's how to contribute.
 
 ## Adding Responses
 
-The easiest way to contribute is by adding new sarcastic responses to `responses.json`.
+The easiest way to contribute is by adding new sarcastic responses to files in the `responses/` directory.
 
 ### Steps
 
 1. Fork this repository
-2. Edit `responses.json`
+2. Edit an existing file in `responses/` (e.g. `responses/404.json`) or create a new one
 3. Run `npm run validate` to check your changes
 4. Open a Pull Request
 
 ### Format
 
-`responses.json` is a JSON object where keys are HTTP status codes and values are arrays of strings:
+Each file in `responses/` is named after an HTTP status code and contains a JSON array of strings:
 
+**`responses/404.json`**
 ```json
-{
-  "404": [
-    "Existing message...",
-    "Your new message here!"
-  ]
-}
+[
+  "Existing message...",
+  "Your new message here!"
+]
 ```
 
 ### Rules
@@ -38,14 +37,13 @@ The easiest way to contribute is by adding new sarcastic responses to `responses
 
 ### Adding a New Status Code
 
-You can add responses for any valid HTTP status code (100-599) that doesn't exist yet. Just add a new key to the JSON object with at least one message:
+Create a new file named `{code}.json` in the `responses/` directory with at least one message:
 
+**`responses/402.json`**
 ```json
-{
-  "402": [
-    "Payment required. My therapy bills aren't going to pay themselves."
-  ]
-}
+[
+  "Payment required. My therapy bills aren't going to pay themselves."
+]
 ```
 
 ## Reporting Issues
@@ -54,7 +52,7 @@ Use GitHub Issues. Be specific about what's wrong or what you'd like to see.
 
 ## Code Changes
 
-For changes beyond `responses.json` (server logic, infrastructure, etc.), please open an issue first to discuss the approach.
+For changes beyond the `responses/` directory (server logic, infrastructure, etc.), please open an issue first to discuss the approach.
 
 ## Security
 
