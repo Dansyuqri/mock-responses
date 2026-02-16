@@ -2,9 +2,11 @@
 
 ## Project Overview
 
-**mock-server** — "Like Mockoon, but worse."
+**mock-responses** — "Like Mockoon, but worse."
 
 A server that mocks **you**. It returns real HTTP status codes with sarcastic, judgmental messages. Community members contribute funny responses via PRs to files in the `responses/` directory.
+
+Also available as an npm package for integration into existing Express servers.
 
 - **License**: MIT (Copyright 2026 Shooks)
 - **Repository owner**: Dansyuqri
@@ -14,8 +16,9 @@ A server that mocks **you**. It returns real HTTP status codes with sarcastic, j
 ## Repository Structure
 
 ```
-mock-server/
-├── index.js            # Express server — entry point, all routes
+mock-responses/
+├── lib.js              # Core library — getResponse(), getAvailableCodes(), middleware()
+├── index.js            # Standalone Express server (uses lib.js)
 ├── responses/          # Sarcastic messages, one file per HTTP status code
 │   ├── 200.json        # e.g. ["message1", "message2"]
 │   ├── 404.json
@@ -23,7 +26,8 @@ mock-server/
 │   └── ...
 ├── validate.js         # Validates responses/ directory structure and rules
 ├── __tests__/          # Test suite (Jest + supertest)
-│   ├── server.test.js  # Integration tests for API routes
+│   ├── lib.test.js     # Unit tests for library API (getResponse, middleware)
+│   ├── server.test.js  # Integration tests for standalone server
 │   └── validate.test.js # Unit tests for validation logic
 ├── package.json        # Dependencies: express, cors, express-rate-limit
 ├── Dockerfile          # Production container (Node 22 Alpine)
@@ -52,12 +56,35 @@ npm start           # Starts server on port 3000 (or PORT env var)
 
 ## Architecture
 
-- **Single-file server** (`index.js`, ~50 lines): Express app with two routes.
-  - `GET /` — returns project info and available status codes.
-  - `GET /:statusCode` — returns the matching HTTP status code with a random sarcastic message from `responses/`.
-- **Data loading**: All `.json` files in `responses/` are read at startup into memory. No database.
+The project has two modes of use:
+
+### 1. npm Package (`lib.js`)
+
+Users install `mock-responses` and import into their own servers:
+
+- `getResponse(statusCode)` — returns `{ status, message }` or `null`
+- `getAvailableCodes()` — returns sorted array of available codes
+- `middleware()` — returns an Express router mountable at any path
+
+`package.json` `main` points to `lib.js`.
+
+### 2. Standalone Server (`index.js`)
+
+Express app that wraps `lib.js` with security headers, CORS, and rate limiting.
+
+- `GET /` — returns project info and available status codes.
+- `GET /:statusCode` — returns the matching HTTP status code with a random sarcastic message from `responses/`.
+
+### Data Loading
+
+All `.json` files in `responses/` are read at startup into memory. No database.
+
+### Security (standalone server only)
+
 - **Rate limiting**: 120 req/min per IP via `express-rate-limit`. Uses `cf-connecting-ip` header when behind Cloudflare.
 - **CORS**: Enabled for all origins (public API).
+- **Trust proxy**: Set to `1` (single hop).
+- **Security headers**: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Content-Security-Policy: default-src 'none'`, `Strict-Transport-Security`, and `x-powered-by` disabled.
 
 ### Response Format
 
@@ -88,7 +115,7 @@ Filenames must be valid HTTP status codes (100-599). Arrays must be non-empty. S
 
 - **Language**: Plain JavaScript (Node.js, CommonJS `require`)
 - **No build step**: Code runs directly with `node`
-- **Simplicity first**: The entire server is intentionally one file. Don't split into routes/controllers/middleware unless there's a strong reason.
+- **Simplicity first**: The library is one file (`lib.js`), the server is one file (`index.js`). Don't add abstractions unless there's a strong reason.
 - **No TypeScript, no linter configured** (yet)
 
 ## Testing
@@ -97,7 +124,8 @@ Filenames must be valid HTTP status codes (100-599). Arrays must be non-empty. S
 - **Run**: `npm test`
 - **TDD**: Write tests before implementing new features. All changes must have corresponding test coverage.
 - **Test files**: Located in `__tests__/` directory.
-  - `server.test.js` — Integration tests for API routes (GET /, GET /:statusCode, CORS, error handling).
+  - `lib.test.js` — Unit tests for `getResponse()`, `getAvailableCodes()`, and `middleware()`.
+  - `server.test.js` — Integration tests for standalone server (GET /, GET /:statusCode, CORS, security headers).
   - `validate.test.js` — Unit tests for `validateResponses()` (filename validation, content rules, edge cases).
 - **Validation**: `npm run validate` is a separate CLI check for the `responses/` directory, also covered by tests.
 
@@ -123,7 +151,7 @@ This project accepts community contributions to `responses/`. Key concerns:
 ## Guidelines for AI Assistants
 
 - **Read before writing**: Always read existing files before proposing changes.
-- **Keep it simple**: This project values extreme simplicity. The whole server is ~50 lines. Don't add abstractions, frameworks, or patterns that aren't needed.
+- **Keep it simple**: This project values extreme simplicity. Don't add abstractions, frameworks, or patterns that aren't needed.
 - **responses/ is community-contributed**: Treat it as data, not code. Changes to the directory structure affect all contributors.
 - **TDD**: Write tests first, then implement. Run `npm test` before committing.
 - **Run validate**: After any change to files in `responses/`, run `npm run validate`.

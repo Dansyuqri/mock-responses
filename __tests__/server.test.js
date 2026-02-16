@@ -17,7 +17,7 @@ describe('GET /', () => {
   it('returns 200 with project info', async () => {
     const res = await request(app).get('/');
     expect(res.status).toBe(200);
-    expect(res.body.name).toBe('mock-server');
+    expect(res.body.name).toBe('mock-responses');
     expect(res.body.tagline).toBe('Like Mockoon, but worse.');
     expect(res.body.usage).toBeDefined();
     expect(res.body.repository).toBeDefined();

@@ -1,10 +1,60 @@
-# mock-server
+# mock-responses
 
 Like Mockoon, but worse.
 
 A server that mocks **you**. Returns real HTTP status codes with sarcastic, judgmental messages — perfect for developers who want their error responses to hurt a little.
 
-## API Usage
+## npm Package
+
+Install it and use it in your own server:
+
+```bash
+npm install mock-responses
+```
+
+### `getResponse(statusCode)`
+
+Returns a random sarcastic `{ status, message }` for the given HTTP status code, or `null` if unavailable.
+
+```javascript
+const { getResponse } = require('mock-responses');
+
+const result = getResponse(404);
+// { status: 404, message: "Whatever you're looking for, it's not here. Just like my will to help you." }
+
+const missing = getResponse(999);
+// null
+```
+
+### `getAvailableCodes()`
+
+Returns a sorted array of all available HTTP status codes.
+
+```javascript
+const { getAvailableCodes } = require('mock-responses');
+
+console.log(getAvailableCodes());
+// [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
+```
+
+### `middleware()`
+
+Returns an Express router you can mount at any path:
+
+```javascript
+const express = require('express');
+const { middleware } = require('mock-responses');
+
+const app = express();
+app.use('/mock', middleware());
+app.listen(3000);
+```
+
+This gives you:
+- `GET /mock/` — project info and available codes
+- `GET /mock/:statusCode` — sarcastic response with the real HTTP status code
+
+## Hosted API
 
 **Base URL:** `http://localhost:3000` (or wherever you deploy it)
 
@@ -45,8 +95,8 @@ Want more? [Contribute one!](CONTRIBUTING.md)
 ## Self-Hosting
 
 ```bash
-git clone https://github.com/Dansyuqri/mock-server.git
-cd mock-server
+git clone https://github.com/Dansyuqri/mock-responses.git
+cd mock-responses
 npm install
 npm start
 ```
@@ -54,15 +104,16 @@ npm start
 Or with Docker:
 
 ```bash
-docker build -t mock-server .
-docker run -p 3000:3000 mock-server
+docker build -t mock-responses .
+docker run -p 3000:3000 mock-responses
 ```
 
 ## Project Structure
 
 ```
-mock-server/
-├── index.js            # Express server (~50 lines)
+mock-responses/
+├── lib.js              # Core library (getResponse, getAvailableCodes, middleware)
+├── index.js            # Standalone Express server
 ├── responses/          # Sarcastic messages, one file per status code
 │   ├── 200.json
 │   ├── 404.json
