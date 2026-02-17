@@ -2,12 +2,12 @@
 
 Like Mockoon, but worse.
 
-An npm package that mocks **you**. Provides sarcastic, judgmental HTTP responses that you can serve from your own Express server.
+Responses that mock you. An npm package that provides sarcastic, judgmental HTTP responses you can mount in your own Express app.
 
 ## Installation
 
 ```bash
-npm install mock-responses
+npm install @dansyuqri/mock-responses
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install mock-responses
 Returns a random sarcastic `{ status, message }` for the given HTTP status code, or `null` if unavailable.
 
 ```javascript
-const { getResponse } = require('mock-responses');
+const { getResponse } = require('@dansyuqri/mock-responses');
 
 const result = getResponse(404);
 // { status: 404, message: "Whatever you're looking for, it's not here. Just like my will to help you." }
@@ -31,7 +31,7 @@ const missing = getResponse(999);
 Returns a sorted array of all available HTTP status codes.
 
 ```javascript
-const { getAvailableCodes } = require('mock-responses');
+const { getAvailableCodes } = require('@dansyuqri/mock-responses');
 
 console.log(getAvailableCodes());
 // [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
@@ -43,7 +43,7 @@ Returns an Express router you can mount at any path:
 
 ```javascript
 const express = require('express');
-const { middleware } = require('mock-responses');
+const { middleware } = require('@dansyuqri/mock-responses');
 
 const app = express();
 app.use('/mock', middleware());
@@ -71,13 +71,13 @@ The response actually comes back with HTTP status 404 — so it works as a real 
 
 Want more? [Contribute one!](CONTRIBUTING.md)
 
-## Full Server Example
+## Full Example
 
 ```javascript
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const { middleware } = require('mock-responses');
+const { middleware } = require('@dansyuqri/mock-responses');
 
 const app = express();
 

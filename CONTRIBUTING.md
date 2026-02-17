@@ -52,7 +52,7 @@ Use GitHub Issues. Be specific about what's wrong or what you'd like to see.
 
 ## Code Changes
 
-For changes beyond the `responses/` directory (server logic, infrastructure, etc.), please open an issue first to discuss the approach.
+For changes beyond the `responses/` directory (library logic, infrastructure, etc.), please open an issue first to discuss the approach.
 
 ## Security
 
