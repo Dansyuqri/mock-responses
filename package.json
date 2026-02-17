@@ -1,11 +1,19 @@
 {
-  "name": "mock-responses",
+  "name": "@dansyuqri/mock-responses",
   "version": "1.0.0",
   "description": "Like Mockoon, but worse. A server that mocks you with sarcastic HTTP status responses.",
   "main": "lib.js",
+  "files": [
+    "lib.js",
+    "responses/"
+  ],
   "scripts": {
     "test": "jest",
     "validate": "node validate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dansyuqri/mock-responses.git"
   },
   "keywords": [
     "mock",
