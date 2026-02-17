@@ -1,7 +1,7 @@
 {
   "name": "@dansyuqri/mock-responses",
   "version": "1.0.0",
-  "description": "Like Mockoon, but worse. A server that mocks you with sarcastic HTTP status responses.",
+  "description": "Responses that mock you.",
   "main": "lib.js",
   "files": [
     "lib.js",

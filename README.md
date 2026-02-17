@@ -2,7 +2,7 @@
 
 Like Mockoon, but worse.
 
-An npm package that mocks **you**. Provides sarcastic, judgmental HTTP responses that you can serve from your own Express server.
+Responses that mock you. An npm package that provides sarcastic, judgmental HTTP responses you can mount in your own Express app.
 
 ## Installation
 
@@ -71,7 +71,7 @@ The response actually comes back with HTTP status 404 — so it works as a real 
 
 Want more? [Contribute one!](CONTRIBUTING.md)
 
-## Full Server Example
+## Full Example
 
 ```javascript
 const express = require('express');
