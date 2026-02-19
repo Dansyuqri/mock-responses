@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.4](https://github.com/Dansyuqri/mock-responses/compare/v1.2.3...v1.2.4) (2026-02-19)
+
+
+### Bug Fixes
+
+* remove registry-url to allow npm OIDC trusted publishing ([4291b01](https://github.com/Dansyuqri/mock-responses/commit/4291b01c37934dab9d4beccf732a782c828b2084))
+* remove registry-url to allow npm OIDC trusted publishing ([d4ea020](https://github.com/Dansyuqri/mock-responses/commit/d4ea0209d527e4becdf633cf1c37607b22a179ae))
+
 ## [1.2.3](https://github.com/Dansyuqri/mock-responses/compare/v1.2.2...v1.2.3) (2026-02-19)
 
 
