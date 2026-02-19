@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.2](https://github.com/Dansyuqri/mock-responses/compare/v1.2.1...v1.2.2) (2026-02-19)
+
+
+### Bug Fixes
+
+* restore registry-url and strip _authToken for OIDC trusted publi… ([e36760d](https://github.com/Dansyuqri/mock-responses/commit/e36760deb0ed9475eeaccd4780ee2afdc225bd1e))
+* restore registry-url and strip _authToken for OIDC trusted publishing ([763e1b3](https://github.com/Dansyuqri/mock-responses/commit/763e1b3c44cf87a3be8d20bdc275c14000e67c95))
+
 ## [1.2.1](https://github.com/Dansyuqri/mock-responses/compare/v1.2.0...v1.2.1) (2026-02-19)
 
 
