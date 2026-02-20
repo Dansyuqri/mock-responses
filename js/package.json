@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dansyuqri/mock-responses.git",
+    "url": "git+https://github.com/mockeroo/mock-responses.git",
     "directory": "js"
   },
   "keywords": [
