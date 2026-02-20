@@ -7,6 +7,10 @@
     "python": {
       "release-type": "python",
       "package-name": "mockeroo-mock-responses"
+    },
+    "go": {
+      "release-type": "go",
+      "package-name": "github.com/mockeroo/mock-response/go"
     }
   }
 }
