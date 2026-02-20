@@ -2,7 +2,7 @@
 
 Like Mockoon, but worse.
 
-Responses that mock you. A package that provides sarcastic, judgmental HTTP responses for any language or framework.
+Responses that mock you. An npm package that provides sarcastic, judgmental HTTP responses you can mount in your own Express app.
 
 ## Try It Live
 
@@ -16,16 +16,7 @@ curl -i https://mock-server.dansyuqri.workers.dev/418
 
 Each endpoint returns the actual HTTP status code, so it works as a real mock server for testing error handling.
 
-## Language Packages
-
-| Language   | Package                      | Install                                      |
-| ---------- | ---------------------------- | -------------------------------------------- |
-| JavaScript | `@mockeroo/mock-responses`   | `npm install @mockeroo/mock-responses`        |
-| Python     | `mockeroo-mock-responses`    | `pip install mockeroo-mock-responses`         |
-
----
-
-## JavaScript
+## Installation
 
 ```bash
 npm install @mockeroo/mock-responses
@@ -72,39 +63,6 @@ app.listen(3000);
 
 ---
 
-## Python
-
-```bash
-pip install mockeroo-mock-responses
-```
-
-### `get_response(status_code)`
-
-Returns a random sarcastic `{"status": int, "message": str}` dict, or `None` if unavailable.
-
-```python
-from mock_responses import get_response
-
-result = get_response(404)
-# {"status": 404, "message": "Whatever you're looking for, it's not here. Just like my will to help you."}
-
-missing = get_response(999)
-# None
-```
-
-### `get_available_codes()`
-
-Returns a sorted list of all available HTTP status codes.
-
-```python
-from mock_responses import get_available_codes
-
-print(get_available_codes())
-# [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
-```
-
----
-
 ## Available Status Codes
 
 `200` `201` `204` `301` `302` `304` `400` `401` `403` `404` `405` `408` `409` `413` `418` `429` `500` `502` `503` `504`
@@ -128,7 +86,7 @@ Want more? [Contribute one!](CONTRIBUTING.md)
 
 ```
 mock-responses/
-├── responses/          # Sarcastic messages — shared across all language packages
+├── responses/          # Sarcastic messages, one file per status code
 │   ├── 200.json
 │   ├── 404.json
 │   ├── 500.json
@@ -138,16 +96,13 @@ mock-responses/
 │   ├── validate.js
 │   ├── __tests__/
 │   └── package.json
-├── python/             # Python/PyPI package (mockeroo-mock-responses)
-│   ├── mock_responses/
-│   └── pyproject.toml
 ├── CONTRIBUTING.md
 └── README.md
 ```
 
 ## Contributing
 
-The easiest way to contribute is by adding funny messages to files in the `responses/` directory — changes there are automatically picked up by every language package. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+The easiest way to contribute is by adding funny messages to files in the `responses/` directory. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 **TL;DR:** Edit a file in `responses/` (or create a new one), run `cd js && npm run validate`, open a PR.
 
