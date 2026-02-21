@@ -5,3 +5,12 @@ node_modules/
 
 # Rust
 rust/target/
+
+# Python
+python/src/mockeroo_mock_responses/responses/
+python/.venv/
+python/__pycache__/
+python/src/mockeroo_mock_responses/__pycache__/
+python/tests/__pycache__/
+python/dist/
+python/*.egg-info/

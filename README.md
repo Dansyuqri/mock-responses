@@ -38,6 +38,11 @@ npm install @mockeroo/mock-responses
 mockeroo-mock-responses = "0.1"
 ```
 
+**Python**
+```bash
+pip install mockeroo-mock-responses
+```
+
 **Go**
 ```bash
 go get github.com/mockeroo/mock-response/go
@@ -95,6 +100,31 @@ use mockeroo_mock_responses::get_available_codes;
 
 println!("{:?}", get_available_codes());
 // [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
+```
+
+### Python
+
+#### `get_response(status_code)`
+
+Returns a random sarcastic `Response` for the given HTTP status code, or `None` if unavailable.
+
+```python
+from mockeroo_mock_responses import get_response
+
+resp = get_response(404)
+if resp is not None:
+    print(resp.status, resp.message)
+```
+
+#### `get_available_codes()`
+
+Returns a sorted list of all supported HTTP status codes.
+
+```python
+from mockeroo_mock_responses import get_available_codes
+
+print(get_available_codes())
+# [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
 ```
 
 ### Go
@@ -189,9 +219,13 @@ mock-responses/
 │   ├── gen.go
 │   └── lib_test.go
 ├── rust/               # Rust crate (mockeroo-mock-responses)
-│   ├── build.rs        # Generates response data at compile time
+│   ├── build.rs        # Copies response data at compile time
 │   ├── src/lib.rs
 │   └── Cargo.toml
+├── python/             # Python package (mockeroo-mock-responses)
+│   ├── hatch_build.py  # Copies response data at install time
+│   ├── src/mockeroo_mock_responses/__init__.py
+│   └── pyproject.toml
 ├── CONTRIBUTING.md
 └── README.md
 ```
