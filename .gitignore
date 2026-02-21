@@ -5,6 +5,7 @@ node_modules/
 
 # Rust
 rust/target/
+rust/responses/
 
 # Python
 python/src/mockeroo_mock_responses/responses/
