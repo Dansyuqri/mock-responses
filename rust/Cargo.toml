@@ -5,6 +5,7 @@ edition = "2021"
 description = "Sarcastic HTTP status code responses"
 license = "MIT"
 repository = "https://github.com/mockeroo/mock-responses"
+readme = "README.md"
 build = "build.rs"
 include = ["src/**", "build.rs", "responses/**"]
 
