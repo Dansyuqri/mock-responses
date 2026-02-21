@@ -1,172 +1,93 @@
 # mock-responses
 
-Responses that mock you. An npm package that provides sarcastic, judgmental HTTP responses you can mount in your own Express app.
+Responses that mock you back. Sarcastic, judgmental HTTP status responses for testing and development.
 
 ## Try It Live
 
-A live server running this package is available at **https://mock-server.mockeroo.workers.dev/**
-
-Hit it directly from your terminal — no installation required:
+A live server is available at **https://mock-server.mockeroo.workers.dev/**
 
 ```bash
-# Project info and available status codes
-curl https://mock-server.mockeroo.workers.dev/
-
-# Get a sarcastic 404
 curl https://mock-server.mockeroo.workers.dev/404
-
-# Get a sarcastic 500
-curl https://mock-server.mockeroo.workers.dev/500
-
-# Or use it as a real mock endpoint in your tests
-curl -i https://mock-server.mockeroo.workers.dev/418
+curl -i https://mock-server.mockeroo.workers.dev/500
 ```
 
 Each endpoint returns the actual HTTP status code, so it works as a real mock server for testing error handling.
 
-## Installation
+## Packages
 
-**npm**
+| Language | Package | Docs |
+|----------|---------|------|
+| JavaScript | [`@mockeroo/mock-responses`](https://www.npmjs.com/package/@mockeroo/mock-responses) | [js/README.md](js/README.md) |
+| Go | [`github.com/mockeroo/mock-response/go`](https://pkg.go.dev/github.com/mockeroo/mock-response/go) | [go/README.md](go/README.md) |
+| Rust | [`mockeroo-mock-responses`](https://crates.io/crates/mockeroo-mock-responses) | [rust/README.md](rust/README.md) |
+| Python | [`mockeroo-mock-responses`](https://pypi.org/project/mockeroo-mock-responses/) | [python/README.md](python/README.md) |
+| PHP | [`mockeroo/mock-responses`](https://packagist.org/packages/mockeroo/mock-responses) | [php/README.md](php/README.md) |
+| Java | [`com.mockeroo:mock-responses`](https://github.com/mockeroo/mock-responses/packages) | [java/README.md](java/README.md) |
+| Ruby | [`mockeroo-mock-responses`](https://rubygems.org/gems/mockeroo-mock-responses) | [ruby/README.md](ruby/README.md) |
+
+## Quick Start
+
+**JavaScript**
 ```bash
 npm install @mockeroo/mock-responses
 ```
-
-**Rust**
-```toml
-# Cargo.toml
-[dependencies]
-mockeroo-mock-responses = "0.1"
-```
-
-**Python**
-```bash
-pip install mockeroo-mock-responses
+```javascript
+const { getResponse } = require('@mockeroo/mock-responses');
+const resp = getResponse(404); // { status: 404, message: "..." }
 ```
 
 **Go**
 ```bash
 go get github.com/mockeroo/mock-response/go
 ```
-
-## Usage
-
-### JavaScript
-
-#### `getResponse(statusCode)`
-
-Returns a random sarcastic `{ status, message }` for the given HTTP status code, or `null` if unavailable.
-
-```javascript
-const { getResponse } = require('@mockeroo/mock-responses');
-
-const result = getResponse(404);
-// { status: 404, message: "Whatever you're looking for, it's not here. Just like my will to help you." }
-
-const missing = getResponse(999);
-// null
+```go
+resp := mockresponse.GetResponse(404) // &Response{Status: 404, Message: "..."}
 ```
 
-#### `getAvailableCodes()`
-
-Returns a sorted array of all available HTTP status codes.
-
-```javascript
-const { getAvailableCodes } = require('@mockeroo/mock-responses');
-
-console.log(getAvailableCodes());
-// [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
+**Rust**
+```toml
+mockeroo-mock-responses = "0.1"
 ```
-
-### Rust
-
-#### `get_response(status_code)`
-
-Returns a random sarcastic `Response` for the given HTTP status code, or `None` if unavailable.
-
 ```rust
-use mockeroo_mock_responses::get_response;
-
-if let Some(resp) = get_response(404) {
-    println!("{} — {}", resp.status, resp.message);
-}
+if let Some(resp) = get_response(404) { println!("{}", resp.message); }
 ```
 
-#### `get_available_codes()`
-
-Returns a sorted `Vec<u16>` of all supported HTTP status codes.
-
-```rust
-use mockeroo_mock_responses::get_available_codes;
-
-println!("{:?}", get_available_codes());
-// [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
+**Python**
+```bash
+pip install mockeroo-mock-responses
 ```
-
-### Python
-
-#### `get_response(status_code)`
-
-Returns a random sarcastic `Response` for the given HTTP status code, or `None` if unavailable.
-
 ```python
 from mockeroo_mock_responses import get_response
-
-resp = get_response(404)
-if resp is not None:
-    print(resp.status, resp.message)
+resp = get_response(404)  # Response(status=404, message="...")
 ```
 
-#### `get_available_codes()`
-
-Returns a sorted list of all supported HTTP status codes.
-
-```python
-from mockeroo_mock_responses import get_available_codes
-
-print(get_available_codes())
-# [200, 201, 204, 301, 302, 304, 400, 401, 403, 404, ...]
+**PHP**
+```bash
+composer require mockeroo/mock-responses
+```
+```php
+$resp = MockResponses::getResponse(404); // Response { status: 404, message: "..." }
 ```
 
-### Go
-
-```go
-import mockresponse "github.com/mockeroo/mock-response/go"
-
-resp := mockresponse.GetResponse(404)
-if resp != nil {
-    fmt.Println(resp.Status, resp.Message)
-}
+**Java**
+```xml
+<dependency>
+  <groupId>com.mockeroo</groupId>
+  <artifactId>mock-responses</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+```java
+Response resp = MockResponses.getResponse(404); // Response { status=404, message="..." }
 ```
 
-### JavaScript — Express middleware
-
-#### `middleware()`
-
-Returns an Express router you can mount at any path:
-
-```javascript
-const express = require('express');
-const { middleware } = require('@mockeroo/mock-responses');
-
-const app = express();
-app.use('/mock', middleware());
-app.listen(3000);
+**Ruby**
+```bash
+gem install mockeroo-mock-responses
 ```
-
-This gives you:
-- `GET /mock/` — project info and available codes
-- `GET /mock/:statusCode` — sarcastic response with the real HTTP status code
-
-### Example Response
-
-```json
-{
-  "status": 404,
-  "message": "Whatever you're looking for, it's not here. Just like my will to help you."
-}
+```ruby
+resp = MockerooMockResponses.get_response(404) # #<Response status=404 message="...">
 ```
-
-The response actually comes back with HTTP status 404 — so it works as a real mock endpoint for testing how your app handles different status codes. Except now the errors are personal.
 
 ## Available Status Codes
 
@@ -174,60 +95,18 @@ The response actually comes back with HTTP status 404 — so it works as a real 
 
 Want more? [Contribute one!](CONTRIBUTING.md)
 
-## Full Example
-
-```javascript
-const express = require('express');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const { middleware } = require('@mockeroo/mock-responses');
-
-const app = express();
-
-app.use(cors());
-
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 120,
-  message: { status: 429, message: "Rate limit exceeded." }
-});
-app.use(limiter);
-
-app.use('/', middleware());
-
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
-```
-
 ## Project Structure
 
 ```
 mock-responses/
-├── responses/          # Canonical data — one JSON file per status code
-│   ├── 200.json
-│   ├── 404.json
-│   ├── 500.json
-│   └── ...
-├── js/                 # npm package (@mockeroo/mock-responses)
-│   ├── lib.js
-│   ├── validate.js
-│   ├── __tests__/
-│   └── package.json
-├── go/                 # Go module (github.com/mockeroo/mock-response/go)
-│   ├── lib.go
-│   ├── gen.go
-│   └── lib_test.go
-├── rust/               # Rust crate (mockeroo-mock-responses)
-│   ├── build.rs        # Copies response data at compile time
-│   ├── src/lib.rs
-│   └── Cargo.toml
-├── python/             # Python package (mockeroo-mock-responses)
-│   ├── hatch_build.py  # Copies response data at install time
-│   ├── src/mockeroo_mock_responses/__init__.py
-│   └── pyproject.toml
-├── CONTRIBUTING.md
-└── README.md
+├── responses/    # Canonical data — one JSON file per status code
+├── js/           # npm package
+├── go/           # Go module
+├── rust/         # Rust crate
+├── python/       # Python package
+├── php/          # Composer package
+├── java/         # Maven package (GitHub Packages)
+└── ruby/         # Ruby gem
 ```
 
 ## Contributing
