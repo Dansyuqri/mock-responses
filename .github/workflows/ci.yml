@@ -358,17 +358,3 @@ jobs:
         working-directory: java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-packagist:
-    runs-on: ubuntu-latest
-    needs: release
-    if: needs.release.outputs.php_release_created == 'true'
-    permissions:
-      contents: read
-    steps:
-      - name: Trigger Packagist update
-        run: |
-          curl -sf -XPOST \
-            -H 'content-type: application/json' \
-            "https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}" \
-            -d '{"repository":{"url":"https://github.com/mockeroo/mock-responses"}}'
