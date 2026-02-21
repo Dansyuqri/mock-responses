@@ -11,6 +11,10 @@
     "rust": {
       "release-type": "rust",
       "package-name": "mockeroo-mock-responses"
+    },
+    "python": {
+      "release-type": "python",
+      "package-name": "mockeroo-mock-responses"
     }
   }
 }
