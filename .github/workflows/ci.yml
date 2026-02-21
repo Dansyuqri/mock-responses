@@ -125,9 +125,67 @@ jobs:
       - run: uv run --with pytest pytest tests/
         working-directory: python
 
+  test-ruby:
+    runs-on: ubuntu-latest
+    needs: validate
+
+    strategy:
+      matrix:
+        ruby-version: ['3.1', '3.2', '3.3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+
+      - run: ruby test/test_mockeroo_mock_responses.rb
+        working-directory: ruby
+
+  test-java:
+    runs-on: ubuntu-latest
+    needs: validate
+
+    strategy:
+      matrix:
+        java-version: ['11', '17', '21']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: temurin
+
+      - run: mvn --no-transfer-progress test
+        working-directory: java
+
+  test-php:
+    runs-on: ubuntu-latest
+    needs: validate
+
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - run: composer install --no-progress
+        working-directory: php
+
+      - run: vendor/bin/phpunit
+        working-directory: php
+
   release:
     runs-on: ubuntu-latest
-    needs: [test-go, test-js, test-rust, test-python]
+    needs: [test-go, test-js, test-rust, test-python, test-ruby, test-java, test-php]
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
@@ -141,6 +199,12 @@ jobs:
       rust_tag_name: ${{ steps.release.outputs['rust--tag_name'] }}
       python_release_created: ${{ steps.release.outputs['python--release_created'] }}
       python_tag_name: ${{ steps.release.outputs['python--tag_name'] }}
+      ruby_release_created: ${{ steps.release.outputs['ruby--release_created'] }}
+      ruby_tag_name: ${{ steps.release.outputs['ruby--tag_name'] }}
+      java_release_created: ${{ steps.release.outputs['java--release_created'] }}
+      java_tag_name: ${{ steps.release.outputs['java--tag_name'] }}
+      php_release_created: ${{ steps.release.outputs['php--release_created'] }}
+      php_tag_name: ${{ steps.release.outputs['php--tag_name'] }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -246,3 +310,51 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: python/dist/
+
+  publish-rubygems:
+    runs-on: ubuntu-latest
+    needs: release
+    if: needs.release.outputs.ruby_release_created == 'true'
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.ruby_tag_name }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Build and push gem
+        run: |
+          cp -r responses ruby/responses
+          gem build mockeroo-mock-responses.gemspec
+          gem push ruby/mockeroo-mock-responses-*.gem
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+
+  publish-maven:
+    runs-on: ubuntu-latest
+    needs: release
+    if: needs.release.outputs.java_release_created == 'true'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release.outputs.java_tag_name }}
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: temurin
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - run: mvn --no-transfer-progress --batch-mode deploy
+        working-directory: java
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

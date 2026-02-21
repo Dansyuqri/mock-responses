@@ -17,6 +17,21 @@
       "release-type": "python",
       "package-name": "mockeroo-mock-responses",
       "tag-prefix": "python/"
+    },
+    "ruby": {
+      "release-type": "ruby",
+      "package-name": "mockeroo-mock-responses",
+      "tag-prefix": "ruby/"
+    },
+    "java": {
+      "release-type": "maven",
+      "package-name": "com.mockeroo:mock-responses",
+      "tag-prefix": "java/"
+    },
+    "php": {
+      "release-type": "php",
+      "package-name": "mockeroo/mock-responses",
+      "tag-prefix": "php/"
     }
   }
 }
