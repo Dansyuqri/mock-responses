@@ -214,6 +214,11 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      # Bundle the canonical response data into the crate before publishing.
+      # build.rs prefers rust/responses/ over ../responses/ when present,
+      # which ensures the packaged tarball is self-contained.
+      - run: cp -r responses rust/responses
+
       - run: cargo publish
         working-directory: rust
         env:

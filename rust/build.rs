@@ -1,10 +1,16 @@
 use std::env;
 use std::fs;
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 fn main() {
-    let responses_dir = Path::new("..").join("responses");
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+
+    // When published, responses/ is bundled alongside the crate.
+    // During development, fall back to the sibling directory in the repo.
+    let local = manifest_dir.join("responses");
+    let sibling = manifest_dir.join("..").join("responses");
+    let responses_dir = if local.exists() { local } else { sibling };
 
     // Tell Cargo to re-run this build script if any response file changes.
     println!(
